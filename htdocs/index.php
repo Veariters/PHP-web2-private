@@ -1,54 +1,23 @@
 <?php
-function print_title()
-{
-  if(isset($_GET['id'])){
-    echo $_GET['id'];
-    }
-    else {
-    echo "Welcome";
-    }
-}
-
-function print_discription()
-{
-  if(isset($_GET['id'])){
-   echo file_get_contents("data/".$_GET['id']);
- }else {
-   echo "Hello PHP";
- }
-}
-
- function print_list()
- {
-   $list = scandir('./data'); //스캔디렉토리
-   $i = 0;
-   while($i < count($list)){ // 데이터폴더내 파일 갯수보다 i가 적으면 반복
-     if($list[$i] != '.' && $list[$i] != '..') { // . , ..이 아닐때
-         echo "<li><a href=\"index.php?id=$list[$i]\">$list[$i]</a></li>\n";
-         // "\ ... "\ : 문법 무시하고 작성합니다.
-     }
-     $i = $i + 1;
-   }
-}
+  require_once('lib/print.php');
+  require_once('view/top.php');
  ?>
+      <a href="create.php">create</a>
 
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>
-      <?php
-        print_title();
-       ?>
-    </title>
-  </head>
-  <body>
-    <h1><a href="index.php">WEB</a></h1>
-    <ol>
-     <?php
-        print_list();
-      ?>
-    </ol>
+    <?php  if(isset($_GET['id'])){ ?>  <!--ID값이 뭔가 있으면.-->
+      <a href="update.php?id=<?= $_GET['id']; ?>">update</a>  <!--php echo 를 = 등호로 생략가능.-->
+
+      <!--<a href="delete_process.php?id=<?= $_GET['id'];?>">
+      delete</a> GET방식 링크로 삭제를 구현하면 링크 url클릭한번 으로 의도하지않은 삭제가 발생할수있음-->
+
+      <form action="delete_process.php" method="post">
+        <input type="hidden" name="id" value="<?=$_GET['id']?>">
+        <input type="submit" value="delete">
+      </form>
+      <!--포스트 방식으로 삭제를 구현 -->
+
+    <?php }  // 파라미터값이 있을때만 업데이트를 표시함. 즉 작성글일때만.?>
+
     <h2>
       <?php
         print_title();
@@ -59,5 +28,6 @@ function print_discription()
       print_discription();
      ?>
 
-  </body>
-</html>
+     <?php
+      require('view/bottom.php');
+      ?>
